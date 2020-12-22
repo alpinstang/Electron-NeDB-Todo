@@ -22,3 +22,7 @@ form.addEventListener('submit', e => {
   ipcRenderer.send('addItem', { item: item.value })
   form.reset()
 })
+
+// Catches ClearAll from menu, sends the event to server to clear the db.
+ipcRenderer.on('clearAll', () => ipcRenderer.send('clearAll'))
+ipcRenderer.on('cleared', () => list.innerHTML = '')

@@ -43,3 +43,12 @@ const db = new Datastore({
   
     mainWindow.webContents.send('added', item)
   })
+
+  // Clears database and send event to client if successful
+ipcMain.on('clearAll', () => {
+    // Without multi being set to true only the first matching item with be removed.
+    db.remove({}, { multi: true }, (err) => {
+      if (err) throw new Error(err)
+      mainWindow.webContents.send('cleared')
+    })
+  })
