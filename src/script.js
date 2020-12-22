@@ -5,24 +5,27 @@ const form = document.querySelector('form')
 const item = document.querySelector('input')
 const list = document.querySelector('ul')
 
-// Render Items to Screen
+//Render Items to Screen
 const render = item => {
-  const li = document.createElement('li')
-  li.innerHTML = item
-  list.appendChild(li)
+    const li = document.createElement('li')
+    li.innerHTML = item
+    list.appendChild(li)
 }
 
-// Get All Items After Starting
+//Get All Items After Starting 
 window.addEventListener('load', () => ipcRenderer.send('loadAll'))
 ipcRenderer.on('loaded', (e, items) => items.forEach(item => render(item.item)))
 
-// Send Item to the server and clear the form
+//Send Item to the server
 form.addEventListener('submit', e => {
-  e.preventDefault()
-  ipcRenderer.send('addItem', { item: item.value })
-  form.reset()
+    e.preventDefault()
+    ipcRenderer.send('addItem', { item: item.value })
+    form.reset()
 })
 
-// Catches ClearAll from menu, sends the event to server to clear the db.
+//Catches Add Item from server
+ipcRenderer.on('added', (e, item) => render(item.item))
+
+//Catches ClearAll from menu, sends the event to server to clear the db.
 ipcRenderer.on('clearAll', () => ipcRenderer.send('clearAll'))
 ipcRenderer.on('cleared', () => list.innerHTML = '')
